@@ -27,3 +27,6 @@ npm-debug.log*
 
 # runtime data (sqlite)
 server/data
+
+# vite cache
+.vite

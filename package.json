@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Mock Market — learn to trade with real market data and paper money, including a time machine.",
+  "description": "Mock Market \u2014 learn to trade with real market data and paper money, including a time machine.",
   "engines": {
     "node": ">=20"
   },
@@ -15,7 +15,8 @@
     "start": "node server/index.js",
     "verify:catalog": "node scripts/verify-catalog.js",
     "smoke": "node scripts/smoke.js",
-    "tunnel": "node scripts/tunnel.js"
+    "service": "bash scripts/run-service.sh",
+    "service:stop": "bash scripts/stop-service.sh"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0",
@@ -31,7 +32,6 @@
   "devDependencies": {
     "@playwright/test": "^1.49.0",
     "@vitejs/plugin-react": "^4.3.3",
-    "ngrok": "^4.3.3",
     "vite": "^5.4.11"
   }
 }

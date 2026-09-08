@@ -43,21 +43,9 @@ npm run dev:server   # API only (auto-restart)
 npm run dev:web      # Vite only
 npm run verify:catalog   # re-check every universe symbol against Yahoo
 npm run smoke        # end-to-end browser test (Playwright) → screenshots in .smoke/
-npm run tunnel       # expose the local server via ngrok (see below)
+npm run service      # run as a detached service with auto-restart (logs: /tmp/mm-server.log)
+npm run service:stop # stop that service
 ```
-
-## 🌐 Sharing your local app (ngrok)
-
-Any ngrok version is fine for development. The devDependency is `ngrok@^4`, and the tunnel script
-works with the free tier:
-
-```bash
-NGROK_AUTHTOKEN=your_token_here npm run tunnel
-```
-
-It opens a public URL to `http://127.0.0.1:4280` (change with `PORT=…`). Get a token free at
-<https://dashboard.ngrok.com>. You can also use `npx ngrok http 4280` directly — nothing here pins
-or restricts ngrok versions.
 
 ## 🧱 How it’s built
 
@@ -94,7 +82,7 @@ It must print `✅ SMOKE PASSED` before shipping changes.
 client/            React app (Vite)
 server/            Express API + SQLite + engines
 shared/catalog.json  the curated tradable universe
-scripts/           verify-catalog, smoke (E2E), dev, tunnel helpers
+scripts/           verify-catalog, smoke (E2E), dev helpers
 dist/              built client (created by npm run build, gitignored)
 .smoke/            QA screenshots (gitignored)
 ```
