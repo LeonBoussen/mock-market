@@ -1,0 +1,37 @@
+{
+  "name": "mock-market",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mock Market — learn to trade with real market data and paper money, including a time machine.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:server": "node --watch server/index.js",
+    "dev:web": "vite --config client/vite.config.js",
+    "dev": "node scripts/dev.js",
+    "build": "vite build --config client/vite.config.js",
+    "start": "node server/index.js",
+    "verify:catalog": "node scripts/verify-catalog.js",
+    "smoke": "node scripts/smoke.js",
+    "tunnel": "node scripts/tunnel.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.21.1",
+    "lightweight-charts": "^4.2.1",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "ngrok": "^4.3.3",
+    "vite": "^5.4.11"
+  }
+}

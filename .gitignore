@@ -1,0 +1,29 @@
+# dependencies
+node_modules
+
+# build output
+dist
+dist-ssr
+
+# project-local caches & QA artifacts
+.npm-cache
+.pw-browsers
+.smoke
+*.tsbuildinfo
+
+# logs
+*.log
+npm-debug.log*
+
+# editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# env
+.env
+.env.*
+
+# runtime data (sqlite)
+server/data
