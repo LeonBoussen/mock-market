@@ -132,3 +132,5 @@ dist/              built client (created by npm run build, gitignored)
 
 Made for beginners: real markets, pretend money, zero risk — and a time machine to learn from the past.
 
+Copyright © 2026 Leon Boussen All rights reserved. No license granted.
+You may not copy, modify, distribute, or use this software without prior written permission from the copyright holder.
