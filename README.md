@@ -1,9 +1,9 @@
 # Mock Market 📈
 
-**Learn to trade with real market data — and fake money.** A practice-trading platform built for
+**Learn to trade with real market data and fake money.** A practice trading platform built for
 absolute beginners. Live quotes and history for **US, European, UK, Asian & Chinese stocks, ETFs and
-crypto**, paper-trading profiles you fund yourself, and a **Time Machine** that replays real prices
-from any past date so you can see exactly how that “should have bought…” idea would have turned out.
+crypto**, paper trading profiles you fund yourself, and a **Time Machine** that replays real prices
+from any past date so you can see exactly how that idea would have turned out.
 
 > ⚠️ Nothing on this site involves real money. It exists to build confidence before trading for real.
 
@@ -13,12 +13,12 @@ from any past date so you can see exactly how that “should have bought…” i
 
 | | |
 |---|---|
-| 🌍 **Real market data** | 129 hand-picked assets (AAPL → Tencent → Moutai → BTC) with live + historical prices from Yahoo Finance — no API keys needed. |
+| 🌍 **Real market data** | 129 hand-picked assets (AAPL → Tencent → Moutai → BTC) with live + historical prices from Yahoo Finance **no API keys needed.** |
 | 🎭 **Paper profiles** | Create multiple practice accounts. Pick a name, avatar, currency (USD/EUR/GBP) and your starting pretend balance. |
-| 📊 **Trade terminal** | Candlestick charts (1D→MAX), market & limit orders, positions with live P&L in your base currency, working orders, order history. |
-| ⏪ **Time Machine** | “If I invested €1,000 into ASML on 16 March 2020…” — replays real daily prices to today or your chosen exit date, with total/annualized return, max drawdown, volatility and a beat-the-S&P-500 comparison. |
+| 📊 **Trade terminal** | Candlestick charts, market & limit orders, positions with live P&L in your base currency, working orders, order history. |
+| ⏪ **Time Machine** | “If I invested €1,000 into ASML on 16 March 2020 what would the outcome have been” replays real daily prices to today or your chosen exit date, with total/annualized return, max drawdown, volatility and a beat-the-S&P-500 comparison. |
 | 🔐 **Proper accounts** | Username + email + salted **scrypt** password hashing, httpOnly session cookies, rate-limited auth, server-side validation. |
-| 👣 **Guided onboarding** | First-login wizard explains the concept and walks you through creating your first profile. |
+| 👣 **Guided onboarding** | First login wizard explains the concept and walks you through creating your first profile. |
 | 🛠️ **Admin & reset** | The first account created on a fresh database is automatically the admin. Admins get an **Admin** page (guide + one-click reset), and `npm run reset` wipes all data from the CLI. |
 
 ## 🚀 Run it
@@ -113,7 +113,7 @@ npm run service:stop # stop that service
 `npm run smoke` boots a fresh server on a free port with a scratch database, drives headless Chromium
 through the whole beginner journey (sign-up → onboarding → dashboard → markets → buy → portfolio →
 Time Machine → second profile → sign-out/in → mobile layout) and drops screenshots into `.smoke/`.
-It must print `✅ SMOKE PASSED` before shipping changes.
+It **must** print `✅ SMOKE PASSED` **before** shipping changes.
 
 ## 📁 Project layout
 
@@ -131,3 +131,4 @@ dist/              built client (created by npm run build, gitignored)
 ---
 
 Made for beginners: real markets, pretend money, zero risk — and a time machine to learn from the past.
+
