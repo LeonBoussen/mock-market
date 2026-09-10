@@ -40,6 +40,8 @@ export default function OverviewPage() {
       setOverview(ov.overview);
       setOrders(or.orders);
       setEquity(eq.points);
+    } catch {
+      // Transient API/quote hiccup — keep whatever we already showed and retry on the next poll.
     } finally {
       setBusy(false);
     }

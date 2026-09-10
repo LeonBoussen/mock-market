@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createChart, ColorType, CrosshairMode, LineStyle } from 'lightweight-charts';
 
 const UP = '#34d399';
@@ -11,6 +11,7 @@ function localTime(sec, offsetSec) {
 export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, markers = [], showVolume = true }) {
   const ref = useRef(null);
   const stateRef = useRef(null);
+  const fitKeyRef = useRef(null);
   const [hover, setHover] = useState(null);
   const [ready, setReady] = useState(false);
   const meta = metaProp || {};
@@ -21,7 +22,7 @@ export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, 
     return bars[1].t - bars[0].t >= 20 * 60 * 60 * 1000;
   }, [bars]);
 
-  const fmtTime = (sec) => {
+  const fmtTime = useCallback((sec) => {
     const d = localTime(sec, gmtoffset);
     return d.toLocaleString(
       'en-US',
@@ -29,7 +30,11 @@ export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, 
         ? { month: 'short', day: 'numeric', year: 'numeric' }
         : { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
     );
-  };
+  }, [gmtoffset, isDaily]);
+  // The chart is created once, so its axis formatter must read the *current*
+  // formatter rather than the one captured on the first render (which had no bars).
+  const fmtTimeRef = useRef(fmtTime);
+  fmtTimeRef.current = fmtTime;
 
   // Chart lifecycle: created once
   useEffect(() => {
@@ -56,7 +61,7 @@ export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, 
       timeScale: { borderColor: 'rgba(150,165,195,0.12)', rightOffset: 4, barSpacing: isDaily ? 7 : 5 },
       localization: {
         locale: 'en-US',
-        timeFormatter: (time) => (time == null ? '' : fmtTime(typeof time === 'number' ? time : time.timestamp)),
+        timeFormatter: (time) => (time == null ? '' : fmtTimeRef.current(typeof time === 'number' ? time : time.timestamp)),
       },
     });
 
@@ -80,6 +85,7 @@ export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, 
       chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
     }
     stateRef.current = { chart, candle, vol };
+    fitKeyRef.current = null;
     setReady(true);
 
     chart.subscribeCrosshairMove((param) => {
@@ -129,7 +135,13 @@ export default function ChartCandles({ bars, meta: metaProp = {}, height = 430, 
         size: 1,
       }))
     );
-    if (bars.length) st.chart.timeScale().fitContent();
+    // Fit only when the dataset changes (new symbol/range/simulation), never on the
+    // regular poll that appends the latest bar — otherwise the user's zoom is reset.
+    const fitKey = bars.length ? bars[0].t : null;
+    if (fitKey != null && fitKeyRef.current !== fitKey) {
+      st.chart.timeScale().fitContent();
+      fitKeyRef.current = fitKey;
+    }
   }, [bars, markers]);
 
   const last = bars.length ? bars[bars.length - 1] : null;

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import {
   Zap, ListOrdered, X, AlertTriangle, CheckCircle2, ArrowUpDown, Clock3, Info,
 } from 'lucide-react';
 import { useAuth } from '../store/auth';
 import api from '../lib/api';
 import { useHistory, useQuote, RANGE_KEYS } from '../lib/market';
-import { useAsset } from '../lib/catalog';
+import { useAsset, CATALOG } from '../lib/catalog';
 import { price, money, pct, signCls, fmtTime, ccy } from '../lib/format';
 import { useToasts } from '../store/ui';
 import { AssetPicker } from '../components/AssetPicker';
@@ -22,8 +22,15 @@ export default function TerminalPage() {
 
   return (
     <div className="page">
-      {asset && (
+      {asset ? (
         <Terminal key={active} symbol={active} onPick={(s) => { setActive(s); nav(`/app/trade/${s}`); }} />
+      ) : (
+        <div className="card empty" style={{ padding: 60 }}>
+          <div className="ico"><AlertTriangle size={24} /></div>
+          <h3>“{active}” isn’t in the Mock Market universe</h3>
+          <p>Pick one of the {CATALOG.length} tradable assets and try again.</p>
+          <Link to="/app/markets" className="btn btn-primary">Browse markets</Link>
+        </div>
       )}
     </div>
   );

@@ -15,6 +15,7 @@
     "start": "node server/index.js",
     "verify:catalog": "node scripts/verify-catalog.js",
     "smoke": "node scripts/smoke.js",
+    "reset": "node scripts/reset-db.js",
     "service": "bash scripts/run-service.sh",
     "service:stop": "bash scripts/stop-service.sh"
   },

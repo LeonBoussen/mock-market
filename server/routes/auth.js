@@ -18,7 +18,7 @@ const signupSchema = z.object({
 });
 
 function publicUser(u) {
-  return { id: u.id, username: u.username, email: u.email, createdAt: u.created_at };
+  return { id: u.id, username: u.username, email: u.email, isAdmin: !!u.is_admin, createdAt: u.created_at };
 }
 
 function profilePublic(p) {
@@ -47,7 +47,9 @@ router.post('/signup', rateLimit('auth'), ah(async (req, res) => {
   if (sql.userByUsername.get(uname)) throw new ApiError(409, 'username_taken', 'That username is already taken.');
   if (sql.userByEmail.get(mail)) throw new ApiError(409, 'email_taken', 'An account with that email already exists.');
 
-  const info = sql.insertUser.run(uname, mail, hashPassword(password), Date.now());
+  // The very first account on a fresh/reset database becomes the admin.
+  const isFirstUser = sql.userCount.get().n === 0;
+  const info = sql.insertUser.run(uname, mail, hashPassword(password), isFirstUser ? 1 : 0, Date.now());
   const user = sql.userById.get(info.lastInsertRowid);
   const token = createSession(user.id);
   res.setHeader('Set-Cookie', sessionCookie(token));

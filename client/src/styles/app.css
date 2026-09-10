@@ -131,15 +131,15 @@
 .stat .mini-ico { margin-left: auto; color: var(--text-3); }
 
 /* ---- Avatars & pickers ---- */
-.avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 30%; flex: none; user-select: none; }
+.avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 30%; flex: none; user-select: none; font-family: var(--font-emoji); }
 .emoji-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.emoji-opt { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line-1); background: var(--surface-1); cursor: pointer; font-size: 18px; line-height: 1; transition: all 0.13s; }
+.emoji-opt { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line-1); background: var(--surface-1); cursor: pointer; font-size: 18px; line-height: 1; font-family: var(--font-emoji); display: inline-flex; align-items: center; justify-content: center; transition: all 0.13s; }
 .emoji-opt:hover { background: var(--surface-4); transform: translateY(-1px); }
 .emoji-opt.on { border-color: var(--brand-1); background: var(--brand-soft); box-shadow: 0 0 0 2px rgba(91,140,255,0.18); }
 .color-grid { display: flex; gap: 8px; flex-wrap: wrap; }
 .color-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.12s; }
 .color-opt:hover { transform: scale(1.12); }
-.color-opt.on { border-color: #fff; box-shadow: 0 0 0 2px rgba(0,0,0,0.55); }
+.color-opt.on { border-color: #fff; box-shadow: 0 0 0 2px var(--brand-1); }
 
 .np-form { display: flex; flex-direction: column; gap: 14px; }
 .np-form .card-pad { padding: 24px; }

@@ -11,6 +11,7 @@ import profileRoutes from './routes/profiles.js';
 import marketRoutes from './routes/markets.js';
 import tradingRoutes from './routes/trading.js';
 import tmRoutes from './routes/timemachine.js';
+import adminRoutes from './routes/admin.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, '..', 'dist');
@@ -36,6 +37,7 @@ app.use('/api/profiles', profileRoutes);
 app.use('/api/markets', marketRoutes);
 app.use('/api/profiles/:profileId', tradingRoutes);
 app.use('/api/time-machine', tmRoutes);
+app.use('/api/admin', adminRoutes);
 
 // API 404
 app.use('/api', (req, res) => {

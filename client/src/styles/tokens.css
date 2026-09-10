@@ -3,6 +3,16 @@
    Calm, dark fintech. One source of truth for the look.
    ============================================================ */
 
+/* Bundled color emoji webfont so the avatar picker never falls back to
+   monochrome "tofu" boxes on systems without a color emoji font installed. */
+@font-face {
+  font-family: 'Twemoji Mozilla';
+  src: url('../assets/fonts/TwemojiMozilla.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Surfaces — near-black navy, layered */
   --bg-page: #06080f;
@@ -23,6 +33,9 @@
   --text-1: #edf1fa;
   --text-2: #b3bdd2;
   --text-3: #79859e;
+
+  /* Emoji — bundled Twemoji first, then platform color emoji, then monochrome */
+  --font-emoji: 'Twemoji Mozilla', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
 
   /* Brand */
   --brand-1: #5b8cff;

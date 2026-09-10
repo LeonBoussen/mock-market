@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { sql } from '../db.js';
-import { requireAuth } from '../lib/security.js';
+import { requireAuth, rateLimit } from '../lib/security.js';
 import { ah, ok, ApiError } from '../lib/util.js';
 import { runSimulation, saveSim, simSummary } from '../lib/tm.js';
 
 const router = Router();
-router.use(requireAuth);
+router.use(requireAuth, rateLimit('general'));
 
 const simSchema = z.object({
   symbol: z.string().min(1).max(40),

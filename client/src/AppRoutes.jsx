@@ -10,6 +10,7 @@ import MarketsPage from './pages/Markets';
 import TerminalPage from './pages/Terminal';
 import PortfolioPage from './pages/Portfolio';
 import TimeMachinePage from './pages/TimeMachine';
+import AdminPage from './pages/Admin';
 
 function Protected({ children }) {
   const status = useAuth((s) => s.status);
@@ -23,6 +24,12 @@ function GuestOnly({ children }) {
   const status = useAuth((s) => s.status);
   if (status === 'loading') return <Splash />;
   if (status === 'auth') return <Navigate to="/app" replace />;
+  return children;
+}
+
+function AdminOnly({ children }) {
+  const isAdmin = useAuth((s) => !!s.user?.isAdmin);
+  if (!isAdmin) return <Navigate to="/app" replace />;
   return children;
 }
 
@@ -41,6 +48,7 @@ export default function AppRoutes() {
         <Route path="trade/:symbol" element={<TerminalPage />} />
         <Route path="timemachine" element={<TimeMachinePage />} />
         <Route path="portfolio" element={<PortfolioPage />} />
+        <Route path="admin" element={<AdminOnly><AdminPage /></AdminOnly>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

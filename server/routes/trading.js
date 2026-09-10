@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { sql } from '../db.js';
-import { requireAuth } from '../lib/security.js';
+import { requireAuth, rateLimit } from '../lib/security.js';
 import { ah, ok, ApiError, catalogItem } from '../lib/util.js';
 import {
   profileOwnerCheck, placeOrder, cancelOrder, portfolioOverview,
@@ -10,7 +10,7 @@ import {
 import { profilePublic } from './auth.js';
 
 const router = Router({ mergeParams: true });
-router.use(requireAuth);
+router.use(requireAuth, rateLimit('general'));
 
 function loadProfile(req) {
   const profile = sql.profileById.get(Number(req.params.profileId));

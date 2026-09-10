@@ -95,7 +95,9 @@ function normalize(result) {
 
 const TTL_SECONDS = {
   '1m': 45, '2m': 60, '5m': 90, '15m': 120, '30m': 150, '60m': 180, '90m': 240,
-  '1d': 240, '5d': 360, '1wk': 600, '1mo': 600, '3mo': 1200,
+  // Live quotes are derived from a 1d chart, so this TTL also caps how stale a
+  // "live" price can be. Keep it short enough that polling actually shows movement.
+  '1d': 45, '5d': 360, '1wk': 600, '1mo': 600, '3mo': 1200,
   quote: 20,
 };
 

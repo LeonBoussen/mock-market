@@ -1,13 +1,17 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { requireAuth } from '../lib/security.js';
-import { ah, ok, ApiError, CATALOG, catalogItem } from '../lib/util.js';
+import { requireAuth, rateLimit } from '../lib/security.js';
+import { ah, ok, ApiError, CATALOG, CATALOG_BY_SYMBOL, catalogItem } from '../lib/util.js';
 import { getQuote, getChart } from '../lib/yahoo.js';
 
 const router = Router();
+// Quote/history calls fan out to Yahoo — keep abuse from hammering the upstream.
+router.use(rateLimit('general'));
 
-const ALLOWED_INTERVALS = new Set(['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1d', '5d', '1wk', '1mo', '3mo']);
+const ALLOWED_INTERVALS = new Set(['1m', '2m', '5m', '15m', '30m', '60m', '1h', '90m', '1d', '5d', '1wk', '1mo', '3mo']);
 const ALLOWED_RANGES = new Set(['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']);
+// Yahoo names the hourly interval "60m"; accept the common "1h" spelling too.
+const INTERVAL_ALIASES = { '1h': '60m' };
 
 router.get('/catalog', ah(async (req, res) => {
   ok(res, { items: CATALOG });
@@ -29,10 +33,11 @@ router.get('/quotes', requireAuth, ah(async (req, res) => {
     const results = await Promise.allSettled(batch.map((s) => getQuote(s)));
     results.forEach((r, j) => {
       const sym = batch[j];
-      if (r.status === 'fulfilled') {
-        const item = catalogItem(sym);
+      const item = CATALOG_BY_SYMBOL.get(sym);
+      if (r.status === 'fulfilled' && item) {
         quotes.push({ ...r.value, name: item.n, region: item.region, type: item.type });
       } else {
+        // Unknown symbol or a Yahoo hiccup: skip it, never fail the whole batch.
         failed.push(sym);
       }
     });
@@ -53,7 +58,7 @@ router.get('/history', requireAuth, ah(async (req, res) => {
   if (!parsed.success) throw new ApiError(400, 'validation', parsed.error.issues[0].message);
   const item = catalogItem(parsed.data.symbol.toUpperCase());
   const chart = await getChart(item.s, {
-    interval: parsed.data.interval,
+    interval: INTERVAL_ALIASES[parsed.data.interval] || parsed.data.interval,
     range: parsed.data.range,
     fresh: parsed.data.fresh === '1',
   });

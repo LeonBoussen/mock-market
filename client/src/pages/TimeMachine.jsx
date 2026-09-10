@@ -102,6 +102,15 @@ export default function TimeMachinePage() {
       const data = await api.get(`/time-machine/sims/${id}`);
       setSim({ result: data.sim.result, series: data.sim.series });
       setSymbol(data.sim.result.symbol);
+      // Keep the config panel in step with the simulation being shown.
+      if (Number.isFinite(data.sim.result.amount)) setAmount(data.sim.result.amount);
+      if (data.sim.result.requestedExitDate) {
+        setHoldToToday(false);
+        setExitDate(data.sim.result.requestedExitDate);
+      } else {
+        setHoldToToday(true);
+      }
+      setStartDate(data.sim.result.entryDate);
     } catch (e) {
       toasts.err(e.message);
     }
@@ -172,7 +181,7 @@ export default function TimeMachinePage() {
             <div className="row">
               <div className="seg" style={{ flex: 1 }}>
                 <button className={holdToToday ? 'on' : ''} onClick={() => setHoldToToday(true)}>Today</button>
-                <button className={!holdToToday ? 'on' : ''} onClick={() => setHoldToToday(false)}>A chosen date</button>
+                <button className={!holdToToday ? 'on' : ''} onClick={() => { setHoldToToday(false); if (!exitDate) setExitDate(ymdAgo(1)); }}>A chosen date</button>
               </div>
               {!holdToToday && (
                 <input type="date" className="input num" style={{ maxWidth: 190 }} min={startDate} max={today}
@@ -226,7 +235,7 @@ export default function TimeMachinePage() {
                 <button className="sim-card" onClick={() => openSaved(s.id)}>
                   <div className="row between">
                     <span className="num" style={{ fontWeight: 800, fontSize: 16 }}>{s.symbol}</span>
-                    <span className={`num ${signCls(s.pnl)}`} style={{ fontWeight: 800 }}>{pct(s.pnl_pct)}</span>
+                    <span className={`num ${signCls(s.pnl)}`} style={{ fontWeight: 800 }}>{pct(s.pnlPct)}</span>
                   </div>
                   <div className="mut" style={{ fontSize: 12.5, marginTop: 3 }}>
                     {money(s.amount, s.currency, { min: 0, max: 0 })} on {s.startDate} → {s.exitDate}

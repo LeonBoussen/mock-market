@@ -67,7 +67,8 @@ export function parseCookies(header = '') {
 }
 
 export function sessionCookie(token) {
-  return `mm_sess=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`;
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  return `mm_sess=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}${secure}`;
 }
 
 export function clearSessionCookie() {
@@ -83,6 +84,13 @@ export function requireAuth(req, res, next) {
     return res.status(401).json({ error: { code: 'unauthorized', message: 'Please sign in to continue.' } });
   }
   req.auth = { user, token };
+  next();
+}
+
+export function requireAdmin(req, res, next) {
+  if (!req.auth?.user?.is_admin) {
+    return res.status(403).json({ error: { code: 'forbidden', message: 'Admin access required.' } });
+  }
   next();
 }
 

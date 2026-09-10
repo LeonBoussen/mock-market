@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
   username TEXT NOT NULL COLLATE NOCASE UNIQUE,
   email TEXT NOT NULL COLLATE NOCASE UNIQUE,
   pass_hash TEXT NOT NULL,
+  is_admin INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL
 );
 
@@ -114,11 +115,20 @@ CREATE TABLE IF NOT EXISTS sims (
 );
 `);
 
+// Migration for databases created before the admin flag existed.
+{
+  const cols = db.prepare('PRAGMA table_info(users)').all().map((c) => c.name);
+  if (!cols.includes('is_admin')) {
+    db.exec('ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0');
+  }
+}
+
 export const sql = {
   userByUsername: db.prepare('SELECT * FROM users WHERE username = ?'),
   userByEmail: db.prepare('SELECT * FROM users WHERE email = ?'),
   userById: db.prepare('SELECT * FROM users WHERE id = ?'),
-  insertUser: db.prepare('INSERT INTO users (username, email, pass_hash, created_at) VALUES (?,?,?,?)'),
+  userCount: db.prepare('SELECT COUNT(*) AS n FROM users'),
+  insertUser: db.prepare('INSERT INTO users (username, email, pass_hash, is_admin, created_at) VALUES (?,?,?,?,?)'),
   sessionByHash: db.prepare('SELECT * FROM sessions WHERE token_hash = ?'),
   insertSession: db.prepare('INSERT INTO sessions (token_hash, user_id, created_at, expires_at) VALUES (?,?,?,?)'),
   deleteSession: db.prepare('DELETE FROM sessions WHERE token_hash = ?'),

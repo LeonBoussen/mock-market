@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import {
   LayoutDashboard, CandlestickChart, History, Wallet, Globe2,
@@ -27,7 +27,7 @@ function useQuickGo() {
 }
 
 export function AppLayout() {
-  const { activeProfile, profiles, logout } = useAuth();
+  const { activeProfile, profiles, user, logout } = useAuth();
   const toasts = useToasts();
   const nav = useNavigate();
   const goAsset = useQuickGo();
@@ -37,6 +37,9 @@ export function AppLayout() {
 
   const active = activeProfile();
   const p = active;
+  const navItems = user?.isAdmin
+    ? [...NAV, { to: '/app/admin', label: 'Admin', icon: ShieldCheck }]
+    : NAV;
 
   return (
     <div className="shell">
@@ -46,7 +49,7 @@ export function AppLayout() {
         </Link>
 
         <nav className="side-nav">
-          {NAV.map((item) => (
+          {navItems.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end}
               className={({ isActive }) => `side-link ${isActive ? 'on' : ''}`}>
               <item.icon size={17.5} />
@@ -172,6 +175,19 @@ function SettingsSheet({ open, onClose }) {
   const [resetOpen, setResetOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteBusy, setDeleteBusy] = useState(false);
+
+  // The sheet stays mounted for the whole session, so re-sync the editable fields
+  // whenever the active profile changes — otherwise a newly created/switched profile
+  // shows (and then overwrites with) the previous profile's name & avatar.
+  const activeId = active?.id ?? null;
+  useEffect(() => {
+    if (!active) return;
+    setName(active.name || '');
+    setEmoji(active.emoji || '🦊');
+    setColor(active.color || '#5b8cff');
+    setErr('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeId]);
 
   const saveProfile = async (e) => {
     e.preventDefault();

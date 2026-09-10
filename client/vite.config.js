@@ -17,6 +17,9 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Allow dev tunnels (ngrok, localtunnel, Cloudflare, etc.) to reach the UI.
+    // A leading "." wildcards every subdomain of that domain.
+    allowedHosts: ['.ngrok-free.app', '.ngrok.io', '.loca.lt', '.trycloudflare.com'],
     proxy: {
       '/api': { target: 'http://127.0.0.1:4280', changeOrigin: false },
     },
